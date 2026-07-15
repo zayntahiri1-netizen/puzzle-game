@@ -1,0 +1,147 @@
+name: Build Decipher Tahiro (AAB + APK)
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # ══ رقم البناء التلقائي — يزيد مع كل تشغيل فيمنع تكرار versionCode ══
+    env:
+      BUILD_NUMBER: ${{ github.run_number }}
+
+    steps:
+      # ── 1) Checkout ──
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2) Node.js ──
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # ── 3) Java 17 (required by Android Gradle Plugin 8.x) ──
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # ── 4) Android SDK ──
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      # ── 5) Install JS dependencies ──
+      - name: Install dependencies
+        run: npm install
+
+      # ── 6) Capacitor sync (copies www/ + plugins into android/) ──
+      - name: Capacitor sync
+        run: npx cap sync android
+
+      # ── 6.5) اطبع رقم الإصدار المحسوب (للرفع على Play Console) ──
+      - name: Show version code
+        run: |
+          BASE=$(grep -oP 'def VERSION_CODE_BASE = \K[0-9]+' android/app/build.gradle)
+          VC=$((BASE + BUILD_NUMBER))
+          echo "════════════════════════════════════════"
+          echo "  versionCode = $VC   (base=$BASE + run=$BUILD_NUMBER)"
+          echo "  versionName = 5.0.$VC"
+          echo "════════════════════════════════════════"
+          echo "### 📦 رقم الإصدار: \`$VC\` — الاسم: \`5.0.$VC\`" >> $GITHUB_STEP_SUMMARY
+
+      # ── 7) Generate Gradle wrapper jar (not committed to the repo) ──
+      - name: Generate Gradle wrapper
+        working-directory: android
+        run: gradle wrapper --gradle-version 8.11.1
+
+      # ── 8) Decode the release keystore from a base64 secret ──
+      - name: Decode keystore
+        if: ${{ env.HAS_KEYSTORE == 'true' }}
+        env:
+          HAS_KEYSTORE: ${{ secrets.DECIPHER_KEYSTORE_BASE64 != '' }}
+          KS_B64: ${{ secrets.DECIPHER_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.DECIPHER_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.DECIPHER_KEY_ALIAS }}
+        run: |
+          # نظّف أي مسافات/أسطر جديدة تسلّلت أثناء النسخ من الهاتف
+          printf '%s' "$KS_B64" | tr -d ' \n\r\t' | base64 -d > android/app/release.keystore || {
+            echo "::error::فشل فك Base64 — السر DECIPHER_KEYSTORE_BASE64 تالف. أعد نسخه كاملاً."
+            exit 1
+          }
+          SIZE=$(wc -c < android/app/release.keystore)
+          echo "Keystore decoded: ${SIZE} bytes"
+          if [ "$SIZE" -lt 500 ]; then
+            echo "::error::ملف المفتاح صغير جداً (${SIZE} بايت) — السر منسوخ ناقصاً. أعد نسخ keystore.base64.txt كاملاً."
+            exit 1
+          fi
+          # ✅ تحقّق فوري من سلامة المفتاح وكلمة المرور والـ alias
+          keytool -list -keystore android/app/release.keystore \
+            -storepass "$KS_PASS" -alias "$KS_ALIAS" >/dev/null 2>&1 || {
+            echo "::error::المفتاح تالف أو كلمة المرور/alias خاطئة. تحقق من الأسرار الأربعة."
+            keytool -list -keystore android/app/release.keystore -storepass "$KS_PASS" 2>&1 | head -5 || true
+            exit 1
+          }
+          echo "✅ Keystore verified successfully (alias: $KS_ALIAS)"
+
+      # Re-evaluate the keystore flag for later steps
+      - name: Detect keystore
+        id: keystore
+        run: |
+          if [ -n "${{ secrets.DECIPHER_KEYSTORE_BASE64 }}" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ── 9a) Build SIGNED AAB + APK (when secrets are configured) ──
+      - name: Build signed AAB and APK
+        if: steps.keystore.outputs.present == 'true'
+        working-directory: android
+        env:
+          DECIPHER_KEYSTORE_PATH: release.keystore
+          DECIPHER_KEYSTORE_PASSWORD: ${{ secrets.DECIPHER_KEYSTORE_PASSWORD }}
+          DECIPHER_KEY_ALIAS: ${{ secrets.DECIPHER_KEY_ALIAS }}
+          DECIPHER_KEY_PASSWORD: ${{ secrets.DECIPHER_KEY_PASSWORD }}
+        run: |
+          ./gradlew bundleRelease assembleRelease --no-daemon --stacktrace
+
+      # ── 9b) Build UNSIGNED debug APK (fallback when no keystore yet) ──
+      - name: Build debug APK (no keystore configured)
+        if: steps.keystore.outputs.present == 'false'
+        working-directory: android
+        run: |
+          echo "::warning::No keystore secret found — building a DEBUG APK only. Add DECIPHER_KEYSTORE_BASE64 to build a signed AAB for Google Play."
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      # ── 10) Upload artifacts ──
+      - name: Upload AAB
+        if: steps.keystore.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: decipher-tahiro-aab
+          path: android/app/build/outputs/bundle/release/*.aab
+          if-no-files-found: warn
+
+      - name: Upload release APK
+        if: steps.keystore.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: decipher-tahiro-apk
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: warn
+
+      - name: Upload debug APK
+        if: steps.keystore.outputs.present == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: decipher-tahiro-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: warn

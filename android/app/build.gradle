@@ -1,0 +1,111 @@
+apply plugin: 'com.android.application'
+
+/* ═══════════════════════════════════════════════════════════════
+   رقم الإصدار التلقائي — يمنع خطأ "رمز الإصدار مستخدم من قبل"
+
+   • VERSION_CODE_BASE : أرضية ثابتة (ارفعها يدوياً فقط لو احتجت قفزة كبيرة)
+   • BUILD_NUMBER      : يأتي من GitHub Actions (github.run_number) ويزيد
+                         تلقائياً مع كل بناء ← فلا يتكرر رقم أبداً.
+   • محلياً (بلا BUILD_NUMBER) يصبح الرقم = الأرضية فقط.
+
+   مثال: BASE=2 و run_number=7  →  versionCode = 9
+   البناء التالي run_number=8   →  versionCode = 10  ✅ دائماً يزيد
+   ═══════════════════════════════════════════════════════════════ */
+def VERSION_CODE_BASE = 2
+def buildNumber = (System.getenv("BUILD_NUMBER") ?: "0").toInteger()
+def computedVersionCode = VERSION_CODE_BASE + buildNumber
+def computedVersionName = "5.0." + computedVersionCode
+
+android {
+    namespace "com.deciphertahiro.app"
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "com.deciphertahiro.app"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode computedVersionCode
+        versionName computedVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+            // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+            // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+
+    signingConfigs {
+        release {
+            def ksPath = System.getenv("DECIPHER_KEYSTORE_PATH") ?: project.findProperty("DECIPHER_KEYSTORE_PATH")
+            def ksPass = System.getenv("DECIPHER_KEYSTORE_PASSWORD") ?: project.findProperty("DECIPHER_KEYSTORE_PASSWORD")
+            def kAlias = System.getenv("DECIPHER_KEY_ALIAS") ?: project.findProperty("DECIPHER_KEY_ALIAS")
+            def kPass  = System.getenv("DECIPHER_KEY_PASSWORD") ?: project.findProperty("DECIPHER_KEY_PASSWORD")
+            if (ksPath != null) {
+                storeFile file(ksPath)
+                storePassword ksPass
+                keyAlias kAlias
+                keyPassword kPass
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Use the release signing config only when a keystore is provided (CI).
+            def ksPath = System.getenv("DECIPHER_KEYSTORE_PATH") ?: project.findProperty("DECIPHER_KEYSTORE_PATH")
+            if (ksPath != null) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+repositories {
+    flatDir {
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+
+    // ── Firebase (BoM manages compatible versions) ──
+    implementation platform('com.google.firebase:firebase-bom:34.15.0')
+    // Firebase products used by the app (no version needed thanks to the BoM):
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-database'
+
+    // ── Google User Messaging Platform (UMP) — GDPR/US consent ──
+    // ملاحظة: هذه بنية موافقة جاهزة. لا تُعرض نافذة الموافقة فعلياً إلا بعد
+    // إعداد رسالة GDPR في AdMob Console وربط معرّف التطبيق. بدون ذلك يبقى UMP صامتاً.
+    implementation 'com.google.android.ump:user-messaging-platform:3.2.0'
+
+    // ── Google Mobile Ads SDK (AdMob) — إعلانات مقابل مكافأة + App Open + Interstitial ──
+    implementation 'com.google.android.gms:play-services-ads:23.6.0'
+}
+
+apply from: 'capacitor.build.gradle'
+
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(Exception e) {
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}
