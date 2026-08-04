@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔒 سياسة الخصوصية — Decipher Tahiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b1220;color:#e2e8f0;font-family:'Tajawal',system-ui,sans-serif;
+  line-height:1.8;padding:18px 14px 60px}
+#legalLangBar{max-width:820px;margin:0 auto 14px;display:flex;justify-content:flex-end}
+/* ══ LEGAL OVERLAYS (Privacy Policy & Delete Account) ══ */
+.legal-ov{position:static;background:transparent;padding:0}
+.legal-box{background:linear-gradient(160deg,#0d1624,#09101c);
+  border:1px solid rgba(255,255,255,.13);border-radius:22px;
+  width:100%;max-width:680px;padding:28px 24px;position:relative;
+  margin:auto;box-shadow:0 30px 80px rgba(0,0,0,.75)max-width:820px;margin:0 auto}
+.legal-close-btn{position:absolute;top:14px;left:14px;background:rgba(255,255,255,.1);border:none;
+  color:#f8fafc;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;transition:.2s}
+.legal-close-btn:hover{background:rgba(255,255,255,.2)}
+.legal-logo-area{text-align:center;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.legal-logo-icon{font-size:2.6rem;display:block;margin-bottom:7px}
+.legal-logo-title{font-size:1.25rem;font-weight:900;background:linear-gradient(90deg,#fbbf24,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.legal-logo-sub{font-size:.72rem;color:#94a3b8;margin-top:3px}
+.legal-h1-privacy{font-size:1.25rem;font-weight:900;color:#60a5fa;margin-bottom:4px}
+.legal-h1-delete{font-size:1.25rem;font-weight:900;color:#f87171;margin-bottom:4px}
+.legal-updated,.legal-subtitle{font-size:.72rem;color:#94a3b8;margin-bottom:20px}
+.legal-section{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:16px;margin-bottom:10px}
+.legal-section h2{font-size:.9rem;font-weight:900;color:#fbbf24;margin-bottom:9px;
+  display:flex;align-items:center;gap:6px}
+.legal-section p{font-size:.8rem;line-height:1.9;color:#cbd5e1;margin-bottom:7px}
+.legal-section p:last-child{margin-bottom:0}
+.legal-section ul{padding-right:18px;font-size:.8rem;line-height:1.9;color:#cbd5e1}
+.legal-section ul li{margin-bottom:3px}
+.legal-highlight{background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);
+  border-radius:10px;padding:11px;font-size:.78rem;color:#93c5fd;line-height:1.8;margin-top:9px}
+.legal-warning-box{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.3);
+  border-radius:10px;padding:11px;font-size:.78rem;color:#fca5a5;margin-top:9px;line-height:1.8}
+.legal-contact-box-inner{background:linear-gradient(135deg,rgba(139,92,246,.12),rgba(96,165,250,.08));
+  border:1px solid rgba(139,92,246,.3);border-radius:14px;padding:16px;text-align:center;margin-bottom:10px}
+.legal-contact-box-inner h2{font-size:.9rem;font-weight:900;color:#a78bfa;margin-bottom:7px}
+.legal-contact-box-inner p{font-size:.8rem;color:#cbd5e1;margin-bottom:5px}
+.legal-contact-box-inner a{color:#a78bfa;font-weight:700;text-decoration:none}
+.legal-email-btn{display:inline-block;background:linear-gradient(135deg,#7c3aed,#4f46e5);
+  color:#fff;padding:10px 22px;border-radius:12px;font-weight:900;font-size:.8rem;
+  text-decoration:none;margin-top:9px;box-shadow:0 4px 14px rgba(124,58,237,.4);
+  font-family:'Tajawal',sans-serif}
+.legal-method-card{background:linear-gradient(135deg,rgba(96,165,250,.07),rgba(139,92,246,.05));
+  border:1px solid rgba(96,165,250,.2);border-radius:12px;padding:15px;margin-bottom:10px}
+.legal-method-card h3{font-size:.85rem;font-weight:900;color:#60a5fa;margin-bottom:8px}
+.legal-method-card p{font-size:.78rem;color:#cbd5e1;line-height:1.8;margin-bottom:4px}
+.legal-step{display:flex;align-items:flex-start;gap:9px;margin-bottom:8px}
+.legal-step-num{background:linear-gradient(135deg,#60a5fa,#a78bfa);color:#fff;
+  width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.68rem;font-weight:900;flex-shrink:0;margin-top:2px}
+.legal-step p{margin:0;font-size:.78rem;color:#cbd5e1;line-height:1.7}
+.legal-timeline{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:10px;padding:13px}
+.legal-timeline-item{display:flex;gap:12px;align-items:flex-start;padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,.05)}
+.legal-timeline-item:last-child{border-bottom:none;padding-bottom:0}
+.legal-tl-dot{width:9px;height:9px;border-radius:50%;background:#60a5fa;flex-shrink:0;margin-top:5px}
+.legal-timeline-item p{font-size:.76rem;color:#94a3b8;line-height:1.7}
+.legal-timeline-item strong{color:#f8fafc}
+.legal-footer-inner{text-align:center;font-size:.65rem;color:#475569;margin-top:24px;
+  padding-top:14px;border-top:1px solid rgba(255,255,255,.06)}
+.legal-close-bottom{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:9px 18px;
+  color:#f8fafc;font-family:'Tajawal',sans-serif;font-size:.82rem;font-weight:700;
+  cursor:pointer;margin-top:18px;transition:.2s}
+.legal-close-bottom:hover{background:rgba(255,255,255,.14)}
+</style>
+</head>
+<body data-page-title="pg_title_privacy">
+<div id="legalLangBar"></div>
+<div class="legal-box">
+    <div class="legal-logo-area">
+      <span class="legal-logo-icon">🕵️</span>
+      <div class="legal-logo-title">Decipher Tahiro</div>
+      <div class="legal-logo-sub" data-i18n="lg_brand">ديسيفر تاهيرو</div>
+    </div>
+
+    <div class="legal-h1-privacy" data-i18n="privacy_link">🔒 سياسة الخصوصية</div>
+    <p class="legal-updated" data-i18n="lg_updated">آخر تحديث: فبراير 2025</p>
+
+    <div class="legal-section">
+      <h2 data-i18n="lg_intro_h">📋 مقدمة</h2>
+      <p data-i18n-html="lg_intro_p">مرحباً بك في <strong>Decipher Tahiro</strong>. نحن نحترم خصوصيتك ونلتزم بحماية بياناتك الشخصية. توضح هذه السياسة كيفية جمع معلوماتك، واستخدامها، وحمايتها عند استخدامك لتطبيقنا.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 data-i18n="lg_collect_h">📦 البيانات التي نجمعها</h2>
+      <p data-i18n="lg_collect_p">عند استخدامك للتطبيق، قد نجمع المعلومات التالية:</p>
+      <ul>
+        <li data-i18n="lg_c1">اسم المستخدم المستعار الذي تختاره</li>
+        <li data-i18n="lg_c2">إحصائيات اللعب (النقاط، المستوى، عدد الألغاز المحلولة)</li>
+        <li data-i18n="lg_c3">الدولة التي تختارها</li>
+        <li data-i18n="lg_c4">تاريخ التسجيل ووقت آخر نشاط</li>
+        <li data-i18n="lg_c5">رابط الإحالة (إن استخدمته)</li>
+      </ul>
+    </div>
+
+    <div class="legal-section">
+      <h2 data-i18n="lg_use_h">🎯 كيفية استخدام البيانات</h2>
+      <p data-i18n="lg_use_p">نستخدم البيانات المجمّعة للأغراض التالية:</p>
+      <ul>
+        <li data-i18n="lg_u1">تقديم تجربة لعب مخصصة وحفظ تقدمك</li>
+        <li data-i18n="lg_u2">عرض لوحة المتصدرين ومقارنة نتائجك مع اللاعبين الآخرين</li>
+        <li data-i18n="lg_u3">تفعيل نظام الإحالة ومكافأة المدعوين</li>
+        <li data-i18n="lg_u4">تحسين وتطوير ميزات اللعبة</li>
+        <li data-i18n="lg_u5">منع الغش والحفاظ على بيئة لعب عادلة</li>
+      </ul>
+    </div>
+
+    <div class="legal-section">
+      <h2 data-i18n="lg_ads_h">📺 الإعلانات (Google AdMob)</h2>
+      <p data-i18n-html="lg_ads_p">يعرض التطبيق إعلانات عبر <strong>Google AdMob</strong>. قد تجمع Google:</p>
+      <ul>
+        <li data-i18n="lg_a1">معرّف الإعلانات (Advertising ID) الخاص بجهازك</li>
+        <li data-i18n="lg_a2">معلومات الجهاز العامة (النوع، نظام التشغيل، اللغة)</li>
+        <li data-i18n="lg_a3">الموقع التقريبي (الدولة/المدينة) لعرض إعلانات ملائمة</li>
+        <li data-i18n="lg_a4">بيانات التفاعل مع الإعلانات (المشاهدات، النقرات)</li>
+      </ul>
+      <div class="legal-highlight" data-i18n-html="lg_gdpr">🇪🇺 <strong>لمستخدمي أوروبا وبريطانيا:</strong> عند أول تشغيل تظهر نافذة موافقة (GDPR) لاختيار إعلانات مخصّصة أو غير مخصّصة. يمكنك تغيير خيارك عبر زر «إدارة خيارات الخصوصية» داخل التطبيق. كما يمكنك إعادة ضبط أو تعطيل معرّف الإعلانات من إعدادات جهازك.</div>
+    </div>
+
+    <div class="legal-section">
+      <h2 data-i18n="lg_store_h">🗄️ تخزين البيانات</h2>
+      <p>يتم تخزين بيانات اللعب في <strong data-i18n="lg_local">متصفحك المحلي</strong> (localStorage) وعلى خوادم <strong>Firebase</strong> من Google في أوروبا الغربية. نتخذ إجراءات أمنية لحماية بياناتك من الوصول غير المصرح به.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 data-i18n="lg_third_h">🤝 مشاركة البيانات مع أطراف ثالثة</h2>
+      <p><strong data-i18n="lg_nosell">لا نبيع</strong> بياناتك الشخصية لأي طرف ثالث. نستخدم الخدمات التالية فقط:</p>
+      <ul>
+        <li data-i18n-html="lg_svc_fb"><strong>Google Firebase</strong> — تخزين بيانات اللعب الجماعي ولوحة المتصدرين</li>
+        <li data-i18n-html="lg_svc_ad"><strong>Google AdMob</strong> — عرض الإعلانات (انظر قسم الإعلانات أعلاه)</li>
+        <li data-i18n-html="lg_svc_sb"><strong>Supabase</strong> — عدّاد اللاعبين المتصلين</li>
+        <li data-i18n-html="lg_svc_rt"><strong>Ably / PubNub / Photon</strong> — قنوات بثّ لحظية لمزامنة حركات اللعب (الاسم المستعار وحركات اللعبة فقط)</li>
+      </ul>
+      <p data-i18n="lg_third_note">تلتزم هذه الخدمات بسياسات خصوصية خاصة بها يمكنك الاطلاع عليها على مواقعها الرسمية.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 data-i18n="lg_rights_h">👤 حقوقك</h2>
+      <p data-i18n="lg_rights_p">لديك الحق في:</p>
+      <ul>
+        <li data-i18n="lg_r1">الاطلاع على البيانات التي نحتفظ بها عنك</li>
+        <li data-i18n="lg_r2">طلب تصحيح بياناتك الشخصية</li>
+        <li data-i18n="lg_r3">طلب حذف حسابك وجميع بياناتك نهائياً</li>
+      </ul>
+      <p>لممارسة هذه الحقوق، يرجى الضغط على <a href="https://puzzle-game-2026.web.app/delete-account" target="_blank" style="color:#60a5fa;font-weight:700">صفحة حذف البيانات</a>.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 data-i18n="lg_cookie_h">🍪 ملفات تعريف الارتباط</h2>
+      <p data-i18n="lg_cookie_p">نستخدم تخزين المتصفح المحلي (localStorage) فقط لحفظ بيانات اللعب. لا نستخدم ملفات تعريف الارتباط (Cookies) لأغراض تتبع أو إعلانات.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 data-i18n="lg_kids_h">👶 حماية الأطفال</h2>
+      <p data-i18n="lg_kids_p">تطبيقنا مخصص للمستخدمين الذين يبلغون من العمر 13 عاماً أو أكثر. لا نجمع عمداً بيانات من الأطفال دون سن 13. إذا علمنا بجمع بيانات طفل دون موافقة الوالدين، سنقوم بحذفها فوراً.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2 data-i18n="lg_upd_h">🔄 تحديثات السياسة</h2>
+      <p data-i18n="lg_upd_p">قد نقوم بتحديث هذه السياسة من وقت لآخر. سنخطرك بأي تغييرات جوهرية عبر إشعار داخل التطبيق. استمرارك في استخدام التطبيق بعد التحديثات يعني موافقتك على السياسة المحدّثة.</p>
+    </div>
+
+    <div class="legal-contact-box-inner">
+      <p data-i18n="lg_contact">📧 للتواصل معنا بشأن الخصوصية:</p>
+      <p><a href="/cdn-cgi/l/email-protection#6515170c1304061c2515101f1f0900480008150c17004b060a08"><span class="__cf_email__" data-cfemail="addddfc4dbccced4edddd8d7d7c1c880c8c0ddc4dfc883cec2c0">[email&#160;protected]</span></a></p>
+    </div>
+
+    <button class="legal-close-bottom" onclick="closeLegal('privacyOv')" data-i18n="close_x">✕ إغلاق</button>
+
+    <div class="legal-footer-inner">
+      <p><span data-i18n="footer_rights">© 2025 Decipher Tahiro — جميع الحقوق محفوظة</span></p>
+    </div>
+  </div>
+<script src="legal-i18n.js"></script>
+</body>
+</html>

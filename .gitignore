@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Capacitor
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/capacitor.settings.gradle
+android/app/capacitor.build.gradle
+.capacitor/
+
+# Gradle
+android/.gradle/
+android/build/
+android/app/build/
+android/captures/
+android/local.properties
+android/gradle/wrapper/gradle-wrapper.jar
+.gradle/
+build/
+
+# Keystores & secrets — NEVER commit these
+*.keystore
+*.jks
+android/app/release.keystore
+keystore.properties
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
