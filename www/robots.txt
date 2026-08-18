@@ -1,0 +1,3 @@
+# Decipher Tahiro — legal pages must be crawlable by Google Play review
+User-agent: *
+Allow: /
