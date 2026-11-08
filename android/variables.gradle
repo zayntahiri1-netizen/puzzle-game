@@ -1,0 +1,32 @@
+ext {
+    // ═══════════════════════════════════════════════════════════════
+    //  targetSdk 36 (Android 16) — تشترطه Google Play بعد 31 أغسطس 2026
+    //
+    //  minSdk 24 (Android 7.0) — تشترطه ميزة «الحماية التلقائية»
+    //  (Automatic Protection) في Play Console. برسالتها الحرفية:
+    //    «تتطلّب ميزة الحماية التلقائية الإصدار 24 كحدّ أدنى أو أحدث.
+    //      يبلغ إصدار SDK من حزمة التطبيق المُحمَّلة 23.»
+    //  لا تُنزله إلى 23: الحماية التلقائية تتوقّف.
+    //  الأثر: لم تعد أجهزة Android 6.0 (المستوى 23) مدعومة.
+    // ═══════════════════════════════════════════════════════════════
+    minSdkVersion = 24
+    compileSdkVersion = 36
+    targetSdkVersion = 36
+
+    // إصدارات AndroidX المتوافقة مع compileSdk 36 (حسب توثيق Capacitor 8)
+    androidxActivityVersion = '1.11.0'
+    androidxAppCompatVersion = '1.7.1'
+    androidxCoordinatorLayoutVersion = '1.3.0'
+    androidxCoreVersion = '1.17.0'
+    androidxFragmentVersion = '1.8.9'
+    coreSplashScreenVersion = '1.2.0'
+    androidxWebkitVersion = '1.14.0'
+    junitVersion = '4.13.2'
+    androidxJunitVersion = '1.3.0'
+    androidxEspressoCoreVersion = '3.7.0'
+    // '10.1.1' هي القيمة التي يحدّدها توثيق Capacitor 6 الرسمي.
+    // المشروع لا يستعمل ولا إضافة cordova واحدة — مجلّد
+    // capacitor-cordova-android-plugins فارغ منها — فالمكتبة تأتي
+    // تبعاً لطبقة التوافق ولا تعمل. لا داعي لتغيير الرقم.
+    cordovaAndroidVersion = '10.1.1'
+}

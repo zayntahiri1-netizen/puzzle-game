@@ -1,0 +1,14 @@
+google.com, pub-1725525147318224, DIRECT, f08c47fec0942fa0
+
+# ════════════════════════════════════════════════════════════════════
+# app-ads.txt — IAB Tech Lab authorized sellers for apps
+# Publisher : Ahmed Bakkali Tahiri — Tetouan, Morocco
+# App       : Decipher Tahiro (com.deciphertahiro.app)
+#
+# ⚠️ لا تحذف هذا الملف ولا تنقله. يجب أن يبقى في جذر النطاق تماماً:
+#        https://puzzle-game-2026.web.app/app-ads.txt
+#    وأن يطابق النطاق حقل "موقع المطوّر" في بطاقة متجر Google Play.
+#
+# ⚠️ Firebase Hosting يستبدل الموقع كاملاً عند كل نشر — وجوده هنا داخل
+#    www/ هو ما يضمن بقاءه بعد كل `firebase deploy`.
+# ════════════════════════════════════════════════════════════════════

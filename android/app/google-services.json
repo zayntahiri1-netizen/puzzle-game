@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "280780311890",
+    "firebase_url": "https://puzzle-game-2026-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "puzzle-game-2026",
+    "storage_bucket": "puzzle-game-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280780311890:android:25d8ddf8c984e4b3afbe8b",
+        "android_client_info": {
+          "package_name": "com.deciphertahiro.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHTYz62E7QYfjSeriVTqctO6SoRSFPenk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
