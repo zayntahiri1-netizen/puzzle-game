@@ -1,0 +1,99 @@
+{
+  /* ═══════════════════════════════════════════════════════════════
+     قواعد أمان Realtime Database — Decipher Tahiro
+
+     النشر:  firebase deploy --only database
+             (أو bash deploy-firebase.sh — ينشرها مع الموقع)
+
+     ⚠️ التطبيق لا يستعمل Firebase Auth، فكل وصول بلا هوية. لذلك لا
+     يمكن ربط الكتابة بصاحبها. هذه القواعد تُغلق ما يمكن إغلاقه وتحدّ
+     من الباقي. الإغلاق الكامل يحتاج تسجيل دخول مجهول — انظر الملاحظة
+     في آخر الملف.
+
+     ملاحظة على الصياغة: Firebase لا يقبل في المستوى الأعلى إلا المفتاح
+     "rules". التعليقات تُكتب هكذا، لا كمفاتيح JSON.
+     ═══════════════════════════════════════════════════════════════ */
+
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    /* ── اللاعبون ──
+       القراءة مفتوحة لأن لوحة الصدارة تحتاجها.
+       الكتابة مع تحقّق من الشكل وحدّ 24 حرفاً للاسم. */
+    "users": {
+      ".read": true,
+
+      "$uid": {
+        ".write": true,
+        ".validate": "newData.hasChildren(['username'])",
+
+        "username":  { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 24" },
+        "lastSeen":  { ".validate": "newData.isNumber()" },
+        "joinDate":  { ".validate": "newData.isString() && newData.val().length <= 40" },
+        "loginType": { ".validate": "newData.isString() && newData.val().length <= 16" },
+        "stats":     { ".validate": "newData.hasChildren()" },
+
+        "$other": { ".validate": false }
+      }
+    },
+
+    /* ── غرف التحدّي ──
+       مفتوحة للقراءة والكتابة لأن اللعب الجماعي يحتاج ذلك،
+       مع تحقّق من شكل الحقول الحسّاسة. */
+    "challenges": {
+      ".read": true,
+
+      "$cid": {
+        ".write": true,
+        ".validate": "newData.hasChildren() || !newData.exists()",
+
+        "status":     { ".validate": "newData.isString() && newData.val().length <= 16" },
+        "maxPlayers": { ".validate": "newData.isNumber() && newData.val() >= 2 && newData.val() <= 8" },
+        "startTime":  { ".validate": "newData.isNumber()" },
+
+        "players": {
+          "$i": {
+            "name":   { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 24" },
+            "isBot":  { ".validate": "newData.isBoolean()" },
+            "solved": { ".validate": "newData.isBoolean()" },
+            "joined": { ".validate": "newData.isNumber()" }
+          }
+        }
+      }
+    },
+
+    /* ── البلاغات ──
+       إضافة فقط: لا قراءة من التطبيق ولا تعديل لبلاغ موجود.
+       تُراجَع من لوحة Firebase وحدها. */
+    "reports": {
+      ".read": false,
+
+      "$rid": {
+        ".write": "!data.exists()",
+        ".validate": "newData.hasChildren(['reported','reason','at'])",
+
+        "reported": { ".validate": "newData.isString() && newData.val().length <= 24" },
+        "reporter": { ".validate": "newData.isString() && newData.val().length <= 24" },
+        "reason":   { ".validate": "newData.isString() && newData.val().length <= 16" },
+        "at":       { ".validate": "newData.isNumber()" },
+
+        "$other":   { ".validate": false }
+      }
+    },
+
+    /* ── المدفوعات ──
+       مغلق نهائياً. المتجر النقدي حُذف من التطبيق، ولا شيء فيه يقرأ
+       هذا المسار أو يكتب فيه. كان منفذاً لمنح الذهب بلا حدّ لمن يكتب
+       فيه سجلّاً، فلا تفتحه. */
+    "payments": {
+      ".read": false,
+      ".write": false
+    }
+
+    /* الخطوة التالية الموصى بها:
+       فعّل Anonymous Authentication في لوحة Firebase، ثم استبدل كل
+       ".write": true أعلاه بـ "auth != null"، وفي users اربط الكتابة
+       بصاحبها: "auth.uid === $uid". عندها لا يكتب أحد نيابةً عن غيره. */
+  }
+}

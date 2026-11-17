@@ -1,0 +1,40 @@
+// Top-level build file
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // AGP 8.9.1 — يدعم compileSdk 36 (Android 16). متوافق مع Gradle 8.11.1
+        classpath 'com.android.tools.build:gradle:8.9.1'
+        classpath 'com.google.gms:google-services:4.5.0'
+    }
+}
+
+apply from: "variables.gradle"
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+/*
+  توحيد compileSdk عبر كل الوحدات (بما فيها إضافات Capacitor).
+  إضافات Capacitor 6 قد تُعرّف compileSdk أقدم؛ هذا يفرض 36 على الجميع
+  فيمنع تحذيرات/أخطاء AGP 8.9 عند البناء بـ compileSdk 36.
+*/
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                compileSdkVersion rootProject.ext.compileSdkVersion
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
